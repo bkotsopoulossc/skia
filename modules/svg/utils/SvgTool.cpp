@@ -48,10 +48,6 @@ int main(int argc, char** argv) {
                                                           /*predecode=*/true),
                   /*predecode=*/true);
 
-    // sk_sp<SkFontMgr> fm = SkFontMgr::RefDefault();
-    // fm->makeFromFile("fonts/bm2_bubble-LightCondensed.otf");
-    // fm->makeFromFile("fonts/bm2_bubble-Regular.otf");
-
     auto fp = sk_make_sp<skia::textlayout::TypefaceFontProvider>();
     fp->registerTypeface(SkTypeface::MakeFromFile("/Users/brad.kotsopoulos/Snapchat/Dev/skia/resources/fonts/bm2_bubble-LightCondensed.otf"));
     fp->registerTypeface(SkTypeface::MakeFromFile("/Users/brad.kotsopoulos/Snapchat/Dev/skia/resources/fonts/bm2_bubble-Regular.otf"));

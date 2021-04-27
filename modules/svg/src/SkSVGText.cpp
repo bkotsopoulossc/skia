@@ -64,12 +64,7 @@ static SkFont ResolveFont(const SkSVGRenderContext& ctx) {
         SkUNREACHABLE;
     };
 
-    if (!ctx.presentationContext().fInherited.fFontFamily.isValue()) {
-
-    }
-    const SkString family = ctx.presentationContext().fInherited.fFontFamily.isValue()
-        ? ctx.presentationContext().fInherited.fFontFamily->family()
-        : SkString("bm2_bubble-LightCondensed");
+    const auto& family = ctx.presentationContext().fInherited.fFontFamily->family();
     std::cout << "looking for: " << family.c_str() << std::endl;
     // std::cout << "paint fill: " << ctx.presentationContext().fInherited.fFill->iri().iri().c_str() << std::endl;
     const SkFontStyle style(weight(*ctx.presentationContext().fInherited.fFontWeight),
@@ -583,14 +578,6 @@ SkRect SkSVGTextLiteral::onObjectBoundingBox(const SkSVGRenderContext& ctx) cons
 
     const SkSVGNode* parent = *this->getParent().get();
     bounds = parent->objectBoundingBox(ctx);
-
-    // const auto ref = ctx.findNodeById(SkSVGIRI(
-    //     SkSVGIRI::Type::kLocal, SkString("brad")));
-    // if (!ref) {
-    //     return bounds;
-    // }
-
-    // bounds = ref->objectBoundingBox(ctx);
 
     // const SkSVGTextContext::ShapedTextCallback compute_bounds =
     //     [&bounds](const SkSVGRenderContext& ctx, const sk_sp<SkTextBlob>& blob, const SkPaint*,
