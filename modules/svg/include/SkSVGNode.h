@@ -53,8 +53,8 @@ enum class SkSVGTag {
     kRect,
     kStop,
     kSvg,
-    kText,
-    kTextLiteral,
+    kText, // 31
+    kTextLiteral, // 32
     kTextPath,
     kTSpan,
     kUse

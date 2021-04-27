@@ -14,6 +14,8 @@
 #include "modules/svg/include/SkSVGValue.h"
 #include "src/core/SkTLazy.h"
 
+#include <iostream>
+
 SkSVGNode::SkSVGNode(SkSVGTag t) : fTag(t) {
     // Uninherited presentation attributes need a non-null default value.
     fPresentationAttributes.fStopColor.set(SkSVGColor(SK_ColorBLACK));
@@ -56,6 +58,8 @@ SkPath SkSVGNode::asPath(const SkSVGRenderContext& ctx) const {
 }
 
 SkRect SkSVGNode::objectBoundingBox(const SkSVGRenderContext& ctx) const {
+    std::cout << "SkSVGNode::onObjectBoundingBox " << int(fTag) << ", " << int(SkSVGTag::kTextLiteral) << std::endl;
+
     return this->onObjectBoundingBox(ctx);
 }
 

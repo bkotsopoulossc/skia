@@ -11,10 +11,12 @@
 #include "include/core/SkStream.h"
 #include "include/core/SkSurface.h"
 #include "include/encode/SkPngEncoder.h"
+#include "modules/skparagraph/include/TypefaceFontProvider.h"
 #include "modules/skresources/include/SkResources.h"
 #include "modules/svg/include/SkSVGDOM.h"
 #include "src/utils/SkOSPath.h"
 #include "tools/flags/CommandLineFlags.h"
+#include "tools/Resources.h"
 
 static DEFINE_string2(input , i, nullptr, "Input SVG file.");
 static DEFINE_string2(output, o, nullptr, "Output PNG file.");
@@ -46,8 +48,16 @@ int main(int argc, char** argv) {
                                                           /*predecode=*/true),
                   /*predecode=*/true);
 
+    // sk_sp<SkFontMgr> fm = SkFontMgr::RefDefault();
+    // fm->makeFromFile("fonts/bm2_bubble-LightCondensed.otf");
+    // fm->makeFromFile("fonts/bm2_bubble-Regular.otf");
+
+    auto fp = sk_make_sp<skia::textlayout::TypefaceFontProvider>();
+    fp->registerTypeface(SkTypeface::MakeFromFile("/Users/brad.kotsopoulos/Snapchat/Dev/skia/resources/fonts/bm2_bubble-LightCondensed.otf"));
+    fp->registerTypeface(SkTypeface::MakeFromFile("/Users/brad.kotsopoulos/Snapchat/Dev/skia/resources/fonts/bm2_bubble-Regular.otf"));
+
     auto svg_dom = SkSVGDOM::Builder()
-                        .setFontManager(SkFontMgr::RefDefault())
+                        .setFontManager(std::move(fp))
                         .setResourceProvider(std::move(rp))
                         .make(in);
     if (!svg_dom) {

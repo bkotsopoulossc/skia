@@ -12,6 +12,8 @@
 #include "modules/svg/include/SkSVGHiddenContainer.h"
 #include "modules/svg/include/SkSVGTypes.h"
 
+#include <iostream>
+
 class SkMatrix;
 class SkSVGRenderContext;
 class SkSVGStop;
@@ -26,7 +28,9 @@ public:
              SkSVGObjectBoundingBoxUnits(SkSVGObjectBoundingBoxUnits::Type::kObjectBoundingBox))
 
 protected:
-    explicit SkSVGGradient(SkSVGTag t) : INHERITED(t) {}
+    explicit SkSVGGradient(SkSVGTag t) : INHERITED(t) {
+        std::cout << "creating gradient" << std::endl;
+    }
 
     bool parseAndSetAttribute(const char*, const char*) override;
 

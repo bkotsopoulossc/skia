@@ -30,7 +30,7 @@ SkSVGPresentationAttributes SkSVGPresentationAttributes::MakeInitial() {
     result.fColorInterpolation.set(SkSVGColorspace::kSRGB);
     result.fColorInterpolationFilters.set(SkSVGColorspace::kLinearRGB);
 
-    result.fFontFamily.init("Sans");
+    result.fFontFamily.init();
     result.fFontStyle.init(SkSVGFontStyle::Type::kNormal);
     result.fFontSize.init(SkSVGLength(24));
     result.fFontWeight.init(SkSVGFontWeight::Type::kNormal);

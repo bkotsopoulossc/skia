@@ -19,6 +19,7 @@
 #include "modules/svg/include/SkSVGNode.h"
 #include "modules/svg/include/SkSVGTypes.h"
 
+#include <iostream>
 namespace {
 
 SkScalar length_size_for_type(const SkSize& viewport, SkSVGLengthContext::LengthType t) {
@@ -401,6 +402,7 @@ SkTLazy<SkPaint> SkSVGRenderContext::commonPaint(const SkSVGPaint& paint_selecto
         // (e.g. gradient control points), which requires access to the render context
         // and node being rendered.
         SkSVGPresentationContext pctx;
+        std::cout << "commonPaint: " << int(fNode->tag()) << " " << paint_selector.iri().iri().c_str() << std::endl;
         SkSVGRenderContext local_ctx(fCanvas,
                                      fFontMgr,
                                      fResourceProvider,

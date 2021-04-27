@@ -1,6 +1,7 @@
 // Copyright 2019 Google LLC.
 #include "modules/skparagraph/include/TypefaceFontProvider.h"
 #include <algorithm>
+#include <iostream>
 #include "include/core/SkFontMgr.h"
 #include "include/core/SkString.h"
 #include "include/core/SkTypeface.h"
@@ -12,11 +13,15 @@ namespace textlayout {
 int TypefaceFontProvider::onCountFamilies() const { return fRegisteredFamilies.count(); }
 
 void TypefaceFontProvider::onGetFamilyName(int index, SkString* familyName) const {
+    std::cout << "onGetFamilyName" << std::endl;
+
     SkASSERT(index < fRegisteredFamilies.count());
     familyName->set(fFamilyNames[index]);
 }
 
 SkFontStyleSet* TypefaceFontProvider::onMatchFamily(const char familyName[]) const {
+    std::cout << "onMatchFamily" << std::endl;
+
     auto found = fRegisteredFamilies.find(SkString(familyName));
     if (found) {
       return SkRef((*found).get());
@@ -28,13 +33,31 @@ sk_sp<SkTypeface> TypefaceFontProvider::onMakeFromFontData(std::unique_ptr<SkFon
     return nullptr;
 }
 
+sk_sp<SkTypeface> TypefaceFontProvider::onLegacyMakeTypeface(const char familyName[], SkFontStyle pattern) const {
+    std::cout << "onLegacyMakeTypeface: " << familyName << std::endl;
+    SkFontStyleSet* styleSet = onMatchFamily(familyName);
+    if (styleSet == nullptr) {
+        return nullptr;
+    }
+
+    SkTypeface* typeface = styleSet->matchStyle(pattern);
+    if (typeface == nullptr) {
+        return nullptr;
+    }
+
+    return sk_sp<SkTypeface>(typeface);
+}
+
 size_t TypefaceFontProvider::registerTypeface(sk_sp<SkTypeface> typeface) {
     if (typeface == nullptr) {
+        std::cout << "Null typeface" << std::endl;
         return 0;
     }
 
     SkString familyName;
     typeface->getFamilyName(&familyName);
+
+    std::cout << "Registering typeface: " << familyName.c_str() << std::endl;
 
     return registerTypeface(std::move(typeface), std::move(familyName));
 }

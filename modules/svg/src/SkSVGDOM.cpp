@@ -49,6 +49,8 @@
 #include "src/core/SkTraceEvent.h"
 #include "src/xml/SkDOM.h"
 
+#include <iostream>
+
 namespace {
 
 bool SetIRIAttribute(const sk_sp<SkSVGNode>& node, SkSVGAttribute attr,
@@ -283,6 +285,7 @@ struct ConstructionContext {
 };
 
 bool set_string_attribute(const sk_sp<SkSVGNode>& node, const char* name, const char* value) {
+    // std::cout << "set_string_attribute: " << int(node->tag()) << name << " - " << value << std::endl;
     if (node->parseAndSetAttribute(name, value)) {
         // Handled by new code path
         return true;
@@ -334,6 +337,7 @@ sk_sp<SkSVGNode> construct_svg_node(const SkDOM& dom, const ConstructionContext&
         SkASSERT(dom.countChildren(xmlNode) == 0);
         auto txt = SkSVGTextLiteral::Make();
         txt->setText(SkString(dom.getName(xmlNode)));
+        txt->setParent(ctx.fParent);
         ctx.fParent->appendChild(std::move(txt));
 
         return nullptr;
