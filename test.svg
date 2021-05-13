@@ -381,14 +381,14 @@
        dx="0"
        dy="0,-0.02,0.02,-0.02,"  xml:space="preserve">THE</text>
     </g>
-<!--     <g >
+    <g >
       <text
        x="105.02408"
        y="73.788503"
        style="stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;font-size:96px;line-height:1;font-family:bm2_bubble-Regular;text-align:center;text-anchor:start;fill:url(#linGrad2_6_om);fill-opacity:1;opacity:0;stroke-width:1;stroke-opacity:1;letter-spacing:2px"
        dx="0"
        dy="0,-0.02,0.02,-0.02,"  xml:space="preserve">THE</text>
-    </g> -->
+    </g>
     <g >
       <text
        x="105.02408"
@@ -440,14 +440,14 @@
        dx="0"
        dy="0,-0.02,0.02,-0.02,0.02,-0.02,0.02,-0.02,"  xml:space="preserve">DOG RAN</text>
     </g>
-<!--     <g >
+    <g >
       <text
        x="9.8411825"
        y="169.705"
        style="stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;font-size:115.5px;line-height:1;font-family:bm2_bubble-LightCondensed;text-align:center;text-anchor:start;fill:url(#linGrad2_7_om);fill-opacity:1;opacity:0;stroke-width:1;stroke-opacity:1;"
        dx="0"
        dy="0,-0.02,0.02,-0.02,0.02,-0.02,0.02,-0.02,"  xml:space="preserve">DOG RAN</text>
-    </g> -->
+    </g>
     <g >
       <text
        x="9.8411825"
