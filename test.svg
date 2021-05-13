@@ -6,6 +6,20 @@
   xmlns="http://www.w3.org/2000/svg"
   xmlns:xlink="http://www.w3.org/1999/xlink"
   viewBox="0 0 398 398">
+  <style type="text/css">
+    @font-face {
+        font-family: bm2_bubble-Regular;
+        src: url('https://d2u01fzxo4g5mf.cloudfront.net/fonts/284a9506-fec3-4cc4-8b85-84b5c406f4c3.otf');
+        font-weight: normal;
+        font-style: normal;
+    }
+    @font-face {
+        font-family: bm2_bubble-LightCondensed;
+        src: url('https://d2u01fzxo4g5mf.cloudfront.net/fonts/01bc41c0-7ea1-4fde-8c40-461af69086ec.otf');
+        font-weight: normal;
+        font-style: normal;
+    }
+  </style>
   <defs>
       <linearGradient
           id="linGrad1_6_om"
