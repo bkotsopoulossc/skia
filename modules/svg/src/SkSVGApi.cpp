@@ -3,17 +3,9 @@
 #include "include/core/SkTypeface.h"
 #include "modules/skparagraph/include/TypefaceFontProvider.h"
 
-// #include "include/core/SkMatrix.h"
-// #include "include/core/SkStream.h"
 #include "include/core/SkSurface.h"
 #include "include/encode/SkPngEncoder.h"
-// #include "include/ports/SkFontMgr_directory.h"
-// #include "modules/skparagraph/include/TypefaceFontProvider.h"
-// #include "modules/skresources/include/SkResources.h"
-// #include "modules/svg/include/SkSVGApi.h"
 #include "modules/svg/include/SkSVGDOM.h"
-// #include "src/utils/SkOSPath.h"
-// #include "tools/flags/CommandLineFlags.h"
 
 #include <iostream>
 
