@@ -11,7 +11,7 @@ if (skia_enable_svg) {
     include_dirs = [ "include" ]
   }
 
-  skia_component("svg") {
+  skia_shared_library("svg") {
     check_includes = false
     import("svg.gni")
     public_configs = [ ":public_config" ]
@@ -22,6 +22,7 @@ if (skia_enable_svg) {
       "../..:skia",
       "../skresources",
       "../skshaper",
+      "../skparagraph",
     ]
   }
 
