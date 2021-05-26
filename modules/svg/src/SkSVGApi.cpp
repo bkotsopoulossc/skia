@@ -13,13 +13,22 @@ namespace {
 
 sk_sp<skia::textlayout::TypefaceFontProvider> fontProvider = sk_make_sp<skia::textlayout::TypefaceFontProvider>();
 
-constexpr int maxSize = 398;
-
 } // namespace
 
 bool SkSVGApi::registerFonts(const std::vector<std::string>& fontFilePaths) {
     for (const auto& fontFilePath : fontFilePaths) {
         fontProvider->registerTypeface(SkTypeface::MakeFromFile(fontFilePath.data()));
+    }
+
+    return true;
+}
+
+bool SkSVGApi::registerFonts(const std::vector<std::pair<std::string, std::string>>& fontFilePaths) {
+    for (const auto& [fontFilePath, fontFamilyName] : fontFilePaths) {
+        fontProvider->registerTypeface(
+            SkTypeface::MakeFromFile(fontFilePath.data()),
+            SkString(fontFamilyName)
+        );
     }
 
     return true;
@@ -36,9 +45,9 @@ bool SkSVGApi::renderSvg(const std::string& svg, const std::string& outputFilePa
         return false;
     }
 
-    auto surface = SkSurface::MakeRasterN32Premul(maxSize, maxSize);
+    auto size = svgDom->containerSize();
+    auto surface = SkSurface::MakeRasterN32Premul(size.fWidth, size.fHeight);
 
-    svgDom->setContainerSize(SkSize::Make(maxSize, maxSize));
     svgDom->render(surface->getCanvas());
 
     SkPixmap pixmap;

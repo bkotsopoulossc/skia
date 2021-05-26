@@ -16,19 +16,11 @@
 static DEFINE_string2(input , i, nullptr, "Input SVG file.");
 static DEFINE_string2(output, o, nullptr, "Output PNG file.");
 
-static DEFINE_int(width , 1024, "Output width.");
-static DEFINE_int(height, 1024, "Output height.");
-
 int main(int argc, char** argv) {
     CommandLineFlags::Parse(argc, argv);
 
     if (FLAGS_input.isEmpty() || FLAGS_output.isEmpty()) {
         std::cerr << "Missing required 'input' and 'output' args.\n";
-        return 1;
-    }
-
-    if (FLAGS_width <= 0 || FLAGS_height <= 0) {
-        std::cerr << "Invalid width/height.\n";
         return 1;
     }
 
@@ -38,10 +30,12 @@ int main(int argc, char** argv) {
         return 1;
     }
 
-    std::cout << "registerFonts: " << SkSVGApi::registerFonts({
-        "/Users/brad.kotsopoulos/Snapchat/Dev/skia/resources/fonts/bm2_bubble-LightCondensed.otf",
-        "/Users/brad.kotsopoulos/Snapchat/Dev/skia/resources/fonts/bm2_bubble-Regular.otf"
-    }) << std::endl;
+    std::vector<std::pair<std::string, std::string>> fontMap = {
+        {"/Users/brad.kotsopoulos/Snapchat/Dev/skia/resources/fonts/bm2_bubble-LightCondensed.otf", "bm2_bubble-LightCondensed"},
+        {"/Users/brad.kotsopoulos/Snapchat/Dev/skia/resources/fonts/bm2_bubble-Regular.otf", "bm2_bubble-Regular"},
+    };
+
+    std::cout << "registerFonts: " << SkSVGApi::registerFonts(fontMap) << std::endl;
 
     std::ifstream t(FLAGS_input[0]);
     std::stringstream buffer;
