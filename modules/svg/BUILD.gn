@@ -38,9 +38,12 @@ if (skia_enable_svg) {
         deps = [
           "../..:flags",
           "../..:skia",
+          "../skparagraph",
         ]
 
-        public_deps = [ ":svg" ]
+        public_deps = [
+          ":svg"
+        ]
       }
     }
 
