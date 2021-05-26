@@ -67,9 +67,7 @@ public:
         return nullptr;
     }
 
-    sk_sp<SkTypeface> onLegacyMakeTypeface(const char[], SkFontStyle) const override {
-        return nullptr;
-    }
+    sk_sp<SkTypeface> onLegacyMakeTypeface(const char[], SkFontStyle) const override;
 
 private:
     SkTHashMap<SkString, sk_sp<TypefaceFontStyleSet>> fRegisteredFamilies;
