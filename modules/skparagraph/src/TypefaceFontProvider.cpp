@@ -55,6 +55,20 @@ size_t TypefaceFontProvider::registerTypeface(sk_sp<SkTypeface> typeface, const 
     return 1;
 }
 
+sk_sp<SkTypeface> TypefaceFontProvider::onLegacyMakeTypeface(const char familyName[], SkFontStyle pattern) const {
+    SkFontStyleSet* styleSet = onMatchFamily(familyName);
+    if (styleSet == nullptr) {
+        return nullptr;
+    }
+
+    SkTypeface* typeface = styleSet->matchStyle(pattern);
+    if (typeface == nullptr) {
+        return nullptr;
+    }
+
+    return sk_sp<SkTypeface>(typeface);
+}
+
 TypefaceFontStyleSet::TypefaceFontStyleSet(const SkString& familyName)
         : fFamilyName(familyName) {}
 

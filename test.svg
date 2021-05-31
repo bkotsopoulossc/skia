@@ -1,0 +1,464 @@
+
+<svg
+  width="398"
+  height="398"
+  xmlns:svg="http://www.w3.org/2000/svg"
+  xmlns="http://www.w3.org/2000/svg"
+  xmlns:xlink="http://www.w3.org/1999/xlink"
+  viewBox="0 0 398 398">
+  <style type="text/css">
+    @font-face {
+        font-family: bm2_bubble-Regular;
+        src: url('https://d2u01fzxo4g5mf.cloudfront.net/fonts/284a9506-fec3-4cc4-8b85-84b5c406f4c3.otf');
+        font-weight: normal;
+        font-style: normal;
+    }
+    @font-face {
+        font-family: bm2_bubble-LightCondensed;
+        src: url('https://d2u01fzxo4g5mf.cloudfront.net/fonts/01bc41c0-7ea1-4fde-8c40-461af69086ec.otf');
+        font-weight: normal;
+        font-style: normal;
+    }
+  </style>
+  <defs>
+      <linearGradient
+          id="linGrad1_6_om"
+          x1="0%"
+          y1="100%"
+          x2="0%"
+          y2="0%"
+          gradientUnits="objectBoundingBox">
+            <stop
+              offset="0"
+              style="stop-color:#ffffff;stop-opacity:0;" />
+            <stop
+              offset="0.37"
+              style="stop-color:#ffffff;stop-opacity:1;" />
+            <stop
+              offset="0.70999998"
+              style="stop-color:#ffffff;stop-opacity:1;" />
+            <stop
+              offset="1"
+              style="stop-color:#ffffff;stop-opacity:1;" />
+      </linearGradient>
+      <linearGradient
+          id="linGrad2_6_om"
+          x1="0%"
+          y1="100%"
+          x2="0%"
+          y2="0%"
+          gradientUnits="objectBoundingBox">
+            <stop
+              offset="0"
+              style="stop-color:#ffffff;stop-opacity:0;" />
+            <stop
+              offset="0.37151703"
+              style="stop-color:#ffffff;stop-opacity:0;" />
+            <stop
+              offset="0.37282932"
+              style="stop-color:#ffffff;stop-opacity:0.93725502;" />
+            <stop
+              offset="0.39220381"
+              style="stop-color:#ffffff;stop-opacity:0.513726;" />
+            <stop
+              offset="1"
+              style="stop-color:#ffffff;stop-opacity:1;" />
+      </linearGradient>
+      <linearGradient
+          id="linGrad3_6_om"
+          x1="0%"
+          y1="100%"
+          x2="0%"
+          y2="0%"
+          gradientUnits="objectBoundingBox">
+            <stop
+              offset="0.0099999998"
+              style="stop-color:#fbcc23;stop-opacity:1;" />
+            <stop
+              offset="0.079999998"
+              style="stop-color:#fbcc23;stop-opacity:1;" />
+            <stop
+              offset="0.16"
+              style="stop-color:#fbcc23;stop-opacity:1;" />
+            <stop
+              offset="0.75"
+              style="stop-color:#ffee00;stop-opacity:1;" />
+            <stop
+              offset="1"
+              style="stop-color:#ffee00;stop-opacity:1;" />
+      </linearGradient>
+
+      <g style="letter-spacing:2px;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;font-size:96px;line-height:1;font-family:bm2_bubble-Regular;text-align:center;text-anchor:start;fill-opacity:1;fill:#ffffff;">
+        <mask maskUnits="userSpaceOnUse" id="textMaskId0_6_om">
+          <text
+           style="stroke:none;fill:#ffffff;stroke-opacity:0;"
+           stroke-width="1"
+           x="105.02408"
+           y="73.788503"
+           dy="0,-0.02,0.02,-0.02,"
+           dx="0" xml:space="preserve">THE</text>
+         </mask>
+        <mask maskUnits="userSpaceOnUse" id="textMaskId1_6_om">
+          <text
+           style="stroke:none;fill:#ffffff;stroke-opacity:0;"
+           stroke-width="1"
+           x="105.02408"
+           y="73.788503"
+           dy="0,-0.02,0.02,-0.02,"
+           dx="0" xml:space="preserve">THE</text>
+         </mask>
+        <mask maskUnits="userSpaceOnUse" id="textMaskId2_6_om">
+          <text
+           style="stroke:#ffffff;fill:none;stroke-opacity:1;"
+           mask="url(#textMaskId3_6_om)"
+           stroke-width="2"
+           x="105.02408"
+           y="73.788503"
+           filter="url(#textFilterId0_6_om)"
+           dy="0.012,-0.02,0.02,-0.02,"
+           dx="0.012" xml:space="preserve">THE</text>
+         </mask>
+        <mask maskUnits="userSpaceOnUse" id="textMaskId3_6_om">
+          <text
+           style="stroke:#000000;fill:#ffffff;stroke-opacity:1;"
+           stroke-width="2"
+           x="105.02408"
+           y="73.788503"
+           dy="-0.012,-0.02,0.02,-0.02,"
+           dx="-0.012" xml:space="preserve">THE</text>
+         </mask>
+      </g>
+
+        <filter
+          id="textFilterId0_6_om"
+          x="-0.86000001"
+          y="-3"
+          width="2.6800001"
+          height="8"
+          style="color-interpolation-filters:sRGB">
+          <feGaussianBlur
+            stdDeviation="0.2"/>
+        </filter>
+        <filter
+          id="textFilterId4_6_om"
+          x="-0.64999998"
+          y="-1.75"
+          width="2.25"
+          height="4.6300001"
+          style="color-interpolation-filters:sRGB">
+          <feGaussianBlur
+            stdDeviation="0"/>
+        </filter>
+        <filter
+          id="textFilterId5_6_om"
+          x="-0.64999998"
+          y="-1.75"
+          width="2.25"
+          height="4.4000001"
+          style="color-interpolation-filters:sRGB">
+          <feGaussianBlur
+            stdDeviation="0"/>
+        </filter>
+        <filter
+          id="textFilterId6_6_om"
+          x="-0.64999998"
+          y="-1.75"
+          width="2.25"
+          height="4.6300001"
+          style="color-interpolation-filters:sRGB">
+          <feGaussianBlur
+            stdDeviation="0.02"/>
+        </filter>
+        <filter
+          id="textFilterId7_6_om"
+          x="-0.64999998"
+          y="-1.75"
+          width="2.25"
+          height="4.6300001"
+          style="color-interpolation-filters:sRGB">
+          <feGaussianBlur
+            stdDeviation="2"/>
+        </filter>
+      <linearGradient
+          id="linGrad1_7_om"
+          x1="0%"
+          y1="100%"
+          x2="0%"
+          y2="0%"
+          gradientUnits="objectBoundingBox">
+            <stop
+              offset="0"
+              style="stop-color:#ffee00;stop-opacity:0;" />
+            <stop
+              offset="0.23999999"
+              style="stop-color:#ffee00;stop-opacity:0;" />
+            <stop
+              offset="0.49000001"
+              style="stop-color:#ffee00;stop-opacity:1;" />
+            <stop
+              offset="0.92000002"
+              style="stop-color:#ffffff;stop-opacity:1;" />
+      </linearGradient>
+      <linearGradient
+          id="linGrad2_7_om"
+          x1="0%"
+          y1="100%"
+          x2="0%"
+          y2="0%"
+          gradientUnits="objectBoundingBox">
+            <stop
+              offset="0"
+              style="stop-color:#ffffff;stop-opacity:0;" />
+            <stop
+              offset="0.37151703"
+              style="stop-color:#ffffff;stop-opacity:0;" />
+            <stop
+              offset="0.37282932"
+              style="stop-color:#ffffff;stop-opacity:0.93725502;" />
+            <stop
+              offset="0.39220381"
+              style="stop-color:#ffffff;stop-opacity:0.513726;" />
+            <stop
+              offset="1"
+              style="stop-color:#ffffff;stop-opacity:1;" />
+      </linearGradient>
+      <linearGradient
+          id="linGrad3_7_om"
+          x1="0%"
+          y1="100%"
+          x2="0%"
+          y2="0%"
+          gradientUnits="objectBoundingBox">
+            <stop
+              offset="0"
+              style="stop-color:#ff3c1a;stop-opacity:1;" />
+            <stop
+              offset="0.079999998"
+              style="stop-color:#ff3c1a;stop-opacity:1;" />
+            <stop
+              offset="0.23999999"
+              style="stop-color:#ff3c1a;stop-opacity:1;" />
+            <stop
+              offset="0.40000001"
+              style="stop-color:#ff6a1a;stop-opacity:1;" />
+            <stop
+              offset="0.69999999"
+              style="stop-color:#ffa82e;stop-opacity:1;" />
+      </linearGradient>
+
+      <g style="stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;font-size:115.5px;line-height:1;font-family:bm2_bubble-LightCondensed;text-align:center;text-anchor:start;fill-opacity:1;fill:#ffffff;">
+        <mask maskUnits="userSpaceOnUse" id="textMaskId0_7_om">
+          <text
+           style="stroke:none;fill:#ffffff;stroke-opacity:0;"
+           stroke-width="1"
+           x="9.8411825"
+           y="169.705"
+           dy="0,-0.02,0.02,-0.02,0.02,-0.02,0.02,-0.02,"
+           dx="0" xml:space="preserve">DOG RAN</text>
+         </mask>
+        <mask maskUnits="userSpaceOnUse" id="textMaskId1_7_om">
+          <text
+           style="stroke:none;fill:#ffffff;stroke-opacity:0;"
+           stroke-width="1"
+           x="9.8411825"
+           y="169.705"
+           dy="0,-0.02,0.02,-0.02,0.02,-0.02,0.02,-0.02,"
+           dx="0" xml:space="preserve">DOG RAN</text>
+         </mask>
+        <mask maskUnits="userSpaceOnUse" id="textMaskId2_7_om">
+          <text
+           style="stroke:#ffffff;fill:none;stroke-opacity:1;"
+           mask="url(#textMaskId3_7_om)"
+           stroke-width="3.5999999"
+           x="9.8411825"
+           y="169.705"
+           filter="url(#textFilterId0_7_om)"
+           dy="0.012,-0.02,0.02,-0.02,0.02,-0.02,0.02,-0.02,"
+           dx="0.016000001" xml:space="preserve">DOG RAN</text>
+         </mask>
+        <mask maskUnits="userSpaceOnUse" id="textMaskId3_7_om">
+          <text
+           style="stroke:#000000;fill:#ffffff;stroke-opacity:1;"
+           stroke-width="4"
+           x="9.8411825"
+           y="169.705"
+           dy="-0.012,-0.02,0.02,-0.02,0.02,-0.02,0.02,-0.02,"
+           dx="-0.016000001" xml:space="preserve">DOG RAN</text>
+         </mask>
+      </g>
+
+        <filter
+          id="textFilterId0_7_om"
+          x="-0.86000001"
+          y="-3"
+          width="2.6800001"
+          height="8"
+          style="color-interpolation-filters:sRGB">
+          <feGaussianBlur
+            stdDeviation="0"/>
+        </filter>
+        <filter
+          id="textFilterId4_7_om"
+          x="-0.64999998"
+          y="-1.75"
+          width="2.25"
+          height="4.6300001"
+          style="color-interpolation-filters:sRGB">
+          <feGaussianBlur
+            stdDeviation="0"/>
+        </filter>
+        <filter
+          id="textFilterId5_7_om"
+          x="-0.64999998"
+          y="-1.75"
+          width="2.25"
+          height="4.4000001"
+          style="color-interpolation-filters:sRGB">
+          <feGaussianBlur
+            stdDeviation="0"/>
+        </filter>
+        <filter
+          id="textFilterId6_7_om"
+          x="-0.64999998"
+          y="-1.75"
+          width="2.25"
+          height="4.6300001"
+          style="color-interpolation-filters:sRGB">
+          <feGaussianBlur
+            stdDeviation="0.02"/>
+        </filter>
+        <filter
+          id="textFilterId7_7_om"
+          x="-0.64999998"
+          y="-1.75"
+          width="2.25"
+          height="4.6300001"
+          style="color-interpolation-filters:sRGB">
+          <feGaussianBlur
+            stdDeviation="2"/>
+        </filter>
+  </defs>
+
+  <g class="text-area-group" transform="rotate(0, 9.3000002, 9.3000002)">
+  <g>
+    <g >
+      <text
+       x="105.02408"
+       y="73.788503"
+       style="stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;font-size:96px;line-height:1;font-family:bm2_bubble-Regular;text-align:center;text-anchor:start;fill:#3b3b3b;fill-opacity:0.60000002;opacity:1;stroke:#3b3b3b;stroke-width:6;stroke-opacity:0.60000002;filter:url(#textFilterId7_6_om);letter-spacing:2px"
+       dx="0.02"
+       dy="0.029999999,-0.02,0.02,-0.02,"  xml:space="preserve">THE</text>
+    </g>
+    <g >
+      <text
+       x="105.02408"
+       y="73.788503"
+       style="stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;font-size:96px;line-height:1;font-family:bm2_bubble-Regular;text-align:center;text-anchor:start;fill:#e1a702;fill-opacity:0;opacity:1;stroke:#e1a702;stroke-width:0;stroke-opacity:0;filter:url(#textFilterId6_6_om);letter-spacing:2px"
+       dx="0.02"
+       dy="0.02,-0.02,0.02,-0.02,"  xml:space="preserve">THE</text>
+    </g>
+    <g >
+      <text
+       x="105.02408"
+       y="73.788503"
+       style="stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;font-size:96px;line-height:1;font-family:bm2_bubble-Regular;text-align:center;text-anchor:start;fill:#740101;fill-opacity:1;opacity:1;stroke:#740101;stroke-width:6.5999999;stroke-opacity:1;filter:url(#textFilterId5_6_om);letter-spacing:2px"
+       dx="0.02"
+       dy="0.015,-0.02,0.02,-0.02,"  xml:space="preserve">THE</text>
+    </g>
+    <g >
+      <text
+       x="105.02408"
+       y="73.788503"
+       style="stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;font-size:96px;line-height:1;font-family:bm2_bubble-Regular;text-align:center;text-anchor:start;fill:#800000;fill-opacity:1;opacity:1;stroke:#800000;stroke-width:5.8000002;stroke-opacity:1;filter:url(#textFilterId4_6_om);letter-spacing:2px"
+       dx="0"
+       dy="0,-0.02,0.02,-0.02,"  xml:space="preserve">THE</text>
+    </g>
+    <g >
+      <text
+       x="105.02408"
+       y="73.788503"
+       style="stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;font-size:96px;line-height:1;font-family:bm2_bubble-Regular;text-align:center;text-anchor:start;fill:url(#linGrad3_6_om);fill-opacity:1;opacity:1;stroke-width:1;stroke-opacity:1;letter-spacing:2px"
+       dx="0"
+       dy="0,-0.02,0.02,-0.02,"  xml:space="preserve">THE</text>
+    </g>
+    <g >
+      <text
+       x="105.02408"
+       y="73.788503"
+       style="stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;font-size:96px;line-height:1;font-family:bm2_bubble-Regular;text-align:center;text-anchor:start;fill:url(#linGrad2_6_om);fill-opacity:1;opacity:0;stroke-width:1;stroke-opacity:1;letter-spacing:2px"
+       dx="0"
+       dy="0,-0.02,0.02,-0.02,"  xml:space="preserve">THE</text>
+    </g>
+    <g >
+      <text
+       x="105.02408"
+       y="73.788503"
+       style="stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;font-size:96px;line-height:1;font-family:bm2_bubble-Regular;text-align:center;text-anchor:start;fill:url(#linGrad1_6_om);fill-opacity:1;opacity:1;stroke-width:1;stroke-opacity:1;filter:url(#textFilterId0_6_om);letter-spacing:2px"
+       dx="0"
+       dy="0,-0.02,0.02,-0.02,"
+       mask="url(#textMaskId2_6_om)" xml:space="preserve">THE</text>
+    </g>
+  </g>
+  <g>
+    <g >
+      <text
+       x="9.8411825"
+       y="169.705"
+       style="stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;font-size:115.5px;line-height:1;font-family:bm2_bubble-LightCondensed;text-align:center;text-anchor:start;fill:#3b3b3b;fill-opacity:0.60000002;opacity:1;stroke:#3b3b3b;stroke-width:6;stroke-opacity:0.60000002;filter:url(#textFilterId7_7_om);"
+       dx="0.02"
+       dy="0.029999999,-0.02,0.02,-0.02,0.02,-0.02,0.02,-0.02,"  xml:space="preserve">DOG RAN</text>
+    </g>
+    <g >
+      <text
+       x="9.8411825"
+       y="169.705"
+       style="stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;font-size:115.5px;line-height:1;font-family:bm2_bubble-LightCondensed;text-align:center;text-anchor:start;fill:#e1a702;fill-opacity:0;opacity:1;stroke:#e1a702;stroke-width:0;stroke-opacity:0;filter:url(#textFilterId6_7_om);"
+       dx="0.02"
+       dy="0.02,-0.02,0.02,-0.02,0.02,-0.02,0.02,-0.02,"  xml:space="preserve">DOG RAN</text>
+    </g>
+    <g >
+      <text
+       x="9.8411825"
+       y="169.705"
+       style="stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;font-size:115.5px;line-height:1;font-family:bm2_bubble-LightCondensed;text-align:center;text-anchor:start;fill:#6a0101;fill-opacity:1;opacity:1;stroke:#6a0101;stroke-width:6.5999999;stroke-opacity:1;filter:url(#textFilterId5_7_om);"
+       dx="0.02"
+       dy="0.02,-0.02,0.02,-0.02,0.02,-0.02,0.02,-0.02,"  xml:space="preserve">DOG RAN</text>
+    </g>
+    <g >
+      <text
+       x="9.8411825"
+       y="169.705"
+       style="stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;font-size:115.5px;line-height:1;font-family:bm2_bubble-LightCondensed;text-align:center;text-anchor:start;fill:#980101;fill-opacity:1;opacity:1;stroke:#980101;stroke-width:6.5999999;stroke-opacity:1;filter:url(#textFilterId4_7_om);"
+       dx="0"
+       dy="0,-0.02,0.02,-0.02,0.02,-0.02,0.02,-0.02,"  xml:space="preserve">DOG RAN</text>
+    </g>
+    <g >
+      <text
+       x="9.8411825"
+       y="169.705"
+       style="stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;font-size:115.5px;line-height:1;font-family:bm2_bubble-LightCondensed;text-align:center;text-anchor:start;fill:url(#linGrad3_7_om);fill-opacity:1;opacity:1;stroke-width:1;stroke-opacity:1;"
+       dx="0"
+       dy="0,-0.02,0.02,-0.02,0.02,-0.02,0.02,-0.02,"  xml:space="preserve">DOG RAN</text>
+    </g>
+    <g >
+      <text
+       x="9.8411825"
+       y="169.705"
+       style="stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;font-size:115.5px;line-height:1;font-family:bm2_bubble-LightCondensed;text-align:center;text-anchor:start;fill:url(#linGrad2_7_om);fill-opacity:1;opacity:0;stroke-width:1;stroke-opacity:1;"
+       dx="0"
+       dy="0,-0.02,0.02,-0.02,0.02,-0.02,0.02,-0.02,"  xml:space="preserve">DOG RAN</text>
+    </g>
+    <g >
+      <text
+       x="9.8411825"
+       y="169.705"
+       style="stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;font-size:115.5px;line-height:1;font-family:bm2_bubble-LightCondensed;text-align:center;text-anchor:start;fill:url(#linGrad1_7_om);fill-opacity:1;opacity:0.60000002;stroke-width:1;stroke-opacity:1;filter:url(#textFilterId0_7_om);"
+       dx="0"
+       dy="0,-0.02,0.02,-0.02,0.02,-0.02,0.02,-0.02,"
+       mask="url(#textMaskId2_7_om)" xml:space="preserve">DOG RAN</text>
+    </g>
+  </g>
+  </g>
+  <circle id="watermark" r="2.5" cx="3%" cy="97%" style="fill:#FFFF00;stroke:#000000" stroke-width="0.5" stroke-opacity="0.5"></circle>
+</svg>
+

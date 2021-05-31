@@ -8,6 +8,7 @@ _src = get_path_info("src", "abspath")
 _include = get_path_info("include", "abspath")
 
 skia_svg_public = [
+  "$_include/SkSVGApi.h",
   "$_include/SkSVGAttribute.h",
   "$_include/SkSVGAttributeParser.h",
   "$_include/SkSVGCircle.h",
@@ -57,6 +58,7 @@ skia_svg_public = [
 ]
 
 skia_svg_sources = [
+  "$_src/SkSVGApi.cpp",
   "$_src/SkSVGAttribute.cpp",
   "$_src/SkSVGAttributeParser.cpp",
   "$_src/SkSVGCircle.cpp",

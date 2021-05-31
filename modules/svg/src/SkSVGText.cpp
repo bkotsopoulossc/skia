@@ -7,6 +7,7 @@
 
 #include "modules/svg/include/SkSVGText.h"
 
+#include <iostream>
 #include <limits>
 
 #include "include/core/SkCanvas.h"
@@ -75,6 +76,9 @@ static SkFont ResolveFont(const SkSVGRenderContext& ctx) {
     // TODO: we likely want matchFamilyStyle here, but switching away from legacyMakeTypeface
     // changes all the results when using the default fontmgr.
     auto tf = ctx.fontMgr()->legacyMakeTypeface(family.c_str(), style);
+    if (!tf) {
+        std::cerr << "Font family fallback: " << family.c_str() << std::endl;
+    }
 
     SkFont font(std::move(tf), size);
     font.setHinting(SkFontHinting::kNone);
