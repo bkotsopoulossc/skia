@@ -91,7 +91,10 @@ public:
         return sk_sp<SkSVGTextLiteral>(new SkSVGTextLiteral());
     }
 
+    SkRect onObjectBoundingBox(const SkSVGRenderContext&) const override;
+
     SVG_ATTR(Text, SkSVGStringType, SkSVGStringType())
+    SVG_OPTIONAL_ATTR(Parent, const SkSVGNode *)
 
 private:
     SkSVGTextLiteral() : INHERITED(SkSVGTag::kTextLiteral) {}

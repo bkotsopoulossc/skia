@@ -293,8 +293,7 @@ void IRGenerator::checkVarDeclaration(int offset, const Modifiers& modifiers, co
                                         "'key' is only permitted within fragment processors");
         }
     }
-    if (this->programKind() == ProgramKind::kRuntimeEffect ||
-        this->programKind() == ProgramKind::kRuntimeColorFilter ||
+    if (this->programKind() == ProgramKind::kRuntimeColorFilter ||
         this->programKind() == ProgramKind::kRuntimeShader) {
         if (modifiers.fFlags & Modifiers::kIn_Flag) {
             this->errorReporter().error(offset, "'in' variables not permitted in runtime effects");
@@ -309,8 +308,7 @@ void IRGenerator::checkVarDeclaration(int offset, const Modifiers& modifiers, co
         this->errorReporter().error(offset, "'key' is not permitted on 'uniform' variables");
     }
     if (modifiers.fLayout.fFlags & Layout::kSRGBUnpremul_Flag) {
-        if (this->programKind() != ProgramKind::kRuntimeEffect &&
-            this->programKind() != ProgramKind::kRuntimeColorFilter &&
+        if (this->programKind() != ProgramKind::kRuntimeColorFilter &&
             this->programKind() != ProgramKind::kRuntimeShader) {
             this->errorReporter().error(offset,
                                         "'srgb_unpremul' is only permitted in runtime effects");
@@ -702,12 +700,12 @@ std::unique_ptr<Block> IRGenerator::applyInvocationIDWorkaround(std::unique_ptr<
     const Variable* loopIdx = &(*fSymbolTable)["sk_InvocationID"]->as<Variable>();
     auto test = BinaryExpression::Make(
             fContext,
-            std::make_unique<VariableReference>(/*offset=*/-1, loopIdx),
+            VariableReference::Make(/*offset=*/-1, loopIdx),
             Token::Kind::TK_LT,
             IntLiteral::Make(fContext, /*offset=*/-1, fInvocations));
     auto next = PostfixExpression::Make(
             fContext,
-            std::make_unique<VariableReference>(/*offset=*/-1, loopIdx,VariableRefKind::kReadWrite),
+            VariableReference::Make(/*offset=*/-1, loopIdx, VariableRefKind::kReadWrite),
             Token::Kind::TK_PLUSPLUS);
     ASTNode endPrimitiveID(&fFile->fNodes, -1, ASTNode::Kind::kIdentifier, "EndPrimitive");
     std::unique_ptr<Expression> endPrimitive = this->convertExpression(endPrimitiveID);
@@ -723,7 +721,7 @@ std::unique_ptr<Block> IRGenerator::applyInvocationIDWorkaround(std::unique_ptr<
                                                                       ExpressionArray{})));
     auto assignment = BinaryExpression::Make(
             fContext,
-            std::make_unique<VariableReference>(/*offset=*/-1, loopIdx, VariableRefKind::kWrite),
+            VariableReference::Make(/*offset=*/-1, loopIdx, VariableRefKind::kWrite),
             Token::Kind::TK_EQ,
             IntLiteral::Make(fContext, /*offset=*/-1, /*value=*/0));
     auto initializer = ExpressionStatement::Make(fContext, std::move(assignment));
@@ -750,12 +748,10 @@ std::unique_ptr<Statement> IRGenerator::getNormalizeSkPositionCode() {
     //                      sk_Position.w);
     SkASSERT(skPerVertex && fRTAdjust);
     auto Ref = [](const Variable* var) -> std::unique_ptr<Expression> {
-        return std::make_unique<VariableReference>(/*offset=*/-1, var,
-                                                   VariableReference::RefKind::kRead);
+        return VariableReference::Make(/*offset=*/-1, var, VariableReference::RefKind::kRead);
     };
     auto WRef = [](const Variable* var) -> std::unique_ptr<Expression> {
-        return std::make_unique<VariableReference>(/*offset=*/-1, var,
-                                                   VariableReference::RefKind::kWrite);
+        return VariableReference::Make(/*offset=*/-1, var, VariableReference::RefKind::kWrite);
     };
     auto Field = [&](const Variable* var, int idx) -> std::unique_ptr<Expression> {
         return FieldAccess::Make(fContext, Ref(var), idx,
@@ -1038,8 +1034,7 @@ void IRGenerator::convertFunction(const ASTNode& f) {
         }
 
         Modifiers m = pd.fModifiers;
-        if (isMain && (this->programKind() == ProgramKind::kRuntimeEffect ||
-                       this->programKind() == ProgramKind::kRuntimeColorFilter ||
+        if (isMain && (this->programKind() == ProgramKind::kRuntimeColorFilter ||
                        this->programKind() == ProgramKind::kRuntimeShader ||
                        this->programKind() == ProgramKind::kFragmentProcessor)) {
             // We verify that the signature is fully correct later. For now, if this is an .fp or
@@ -1084,27 +1079,6 @@ void IRGenerator::convertFunction(const ASTNode& f) {
     // Check the function signature of `main`.
     if (isMain) {
         switch (this->programKind()) {
-            case ProgramKind::kRuntimeEffect: {
-                // Legacy/generic runtime effects take a wide variety of main() signatures.
-                // (half4|float4) main(float2?, (half4|float4)?)
-                if (!typeIsValidForColor(*returnType)) {
-                    this->errorReporter().error(f.fOffset,
-                                                "'main' must return: 'vec4', 'float4', or 'half4'");
-                    return;
-                }
-                bool validParams =
-                        (parameters.size() == 0) ||
-                        (parameters.size() == 1 && paramIsCoords(0)) ||
-                        (parameters.size() == 1 && paramIsInputColor(0)) ||
-                        (parameters.size() == 2 && paramIsCoords(0) && paramIsInputColor(1));
-                if (!validParams) {
-                    this->errorReporter().error(
-                            f.fOffset,
-                            "'main' parameters must be: ([float2 coords], [half4 color])");
-                    return;
-                }
-                break;
-            }
             case ProgramKind::kRuntimeColorFilter: {
                 // (half4|float4) main(half4|float4)
                 if (!typeIsValidForColor(*returnType)) {
@@ -1590,14 +1564,12 @@ std::unique_ptr<Expression> IRGenerator::convertIdentifier(int offset, StringFra
                 }
             }
             // default to kRead_RefKind; this will be corrected later if the variable is written to
-            return std::make_unique<VariableReference>(offset,
-                                                       var,
-                                                       VariableReference::RefKind::kRead);
+            return VariableReference::Make(offset, var, VariableReference::RefKind::kRead);
         }
         case Symbol::Kind::kField: {
             const Field* field = &result->as<Field>();
-            auto base = std::make_unique<VariableReference>(offset, &field->owner(),
-                                                            VariableReference::RefKind::kRead);
+            auto base = VariableReference::Make(offset, &field->owner(),
+                                                VariableReference::RefKind::kRead);
             return FieldAccess::Make(fContext, std::move(base), field->fieldIndex(),
                                      FieldAccess::OwnerKind::kAnonymousInterfaceBlock);
         }

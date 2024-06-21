@@ -76,6 +76,11 @@ public:
         // For testing purposes, completely disable the inliner. (Normally, Runtime Effects don't
         // run the inliner directly, but they still get an inlining pass once they are painted.)
         bool forceNoInline = false;
+        // For testing purposes only; only honored when GR_TEST_UTILS is enabled. This flag lifts
+        // the ES2 restrictions on Runtime Effects that are gated by the `strictES2Mode` check.
+        // Be aware that the software renderer and pipeline-stage effect are still largely
+        // ES3-unaware and can still fail or crash if post-ES2 features are used.
+        bool enforceES2Restrictions = true;
     };
 
     // If the effect is compiled successfully, `effect` will be non-null.
@@ -102,10 +107,6 @@ public:
     // Most shaders don't use the input color, so that parameter is optional.
     static Result MakeForShader(SkString sksl, const Options&);
 
-    // [DEPRECATED] Make supports SkSL that is legal as either an SkShader or SkColorFilter.
-    // makeColorFilter might return nullptr, if the effect is dependent on position in any way.
-    static Result Make(SkString sksl, const Options&);
-
     // We can't use a default argument for `options` due to a bug in Clang.
     // https://bugs.llvm.org/show_bug.cgi?id=36684
     static Result MakeForColorFilter(SkString sksl) {
@@ -113,9 +114,6 @@ public:
     }
     static Result MakeForShader(SkString sksl) {
         return MakeForShader(std::move(sksl), Options{});
-    }
-    static Result Make(SkString sksl) {
-        return Make(std::move(sksl), Options{});
     }
 
     static Result MakeForColorFilter(std::unique_ptr<SkSL::Program> program);
@@ -216,8 +214,8 @@ private:
     FilterColorInfo getFilterColorInfo();
 
 #if SK_SUPPORT_GPU
-    friend class GrSkSLFP;      // fBaseProgram, fSampleUsages
-    friend class GrGLSLSkSLFP;  //
+    friend class GrSkSLFP;             // fBaseProgram, fSampleUsages
+    friend class GrGLSLSkSLFP;         //
 #endif
 
     friend class SkRTShader;            // fBaseProgram, fMain

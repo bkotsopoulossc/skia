@@ -49,6 +49,8 @@
 #include "src/core/SkTraceEvent.h"
 #include "src/xml/SkDOM.h"
 
+#include <iostream>
+
 namespace {
 
 bool SetIRIAttribute(const sk_sp<SkSVGNode>& node, SkSVGAttribute attr,
@@ -242,6 +244,7 @@ SortedDictionaryEntry<sk_sp<SkSVGNode>(*)()> gTagFactories[] = {
     { "feBlend"           , []() -> sk_sp<SkSVGNode> { return SkSVGFeBlend::Make();            }},
     { "feColorMatrix"     , []() -> sk_sp<SkSVGNode> { return SkSVGFeColorMatrix::Make();      }},
     { "feComposite"       , []() -> sk_sp<SkSVGNode> { return SkSVGFeComposite::Make();        }},
+    { "feDiffuseLighting" , []() -> sk_sp<SkSVGNode> { return SkSVGFeDiffuseLighting::Make();  }},
     { "feDisplacementMap" , []() -> sk_sp<SkSVGNode> { return SkSVGFeDisplacementMap::Make();  }},
     { "feDistantLight"    , []() -> sk_sp<SkSVGNode> { return SkSVGFeDistantLight::Make();     }},
     { "feFlood"           , []() -> sk_sp<SkSVGNode> { return SkSVGFeFlood::Make();            }},
@@ -282,6 +285,7 @@ struct ConstructionContext {
 };
 
 bool set_string_attribute(const sk_sp<SkSVGNode>& node, const char* name, const char* value) {
+    // std::cout << "set_string_attribute: " << int(node->tag()) << name << " - " << value << std::endl;
     if (node->parseAndSetAttribute(name, value)) {
         // Handled by new code path
         return true;
@@ -333,6 +337,7 @@ sk_sp<SkSVGNode> construct_svg_node(const SkDOM& dom, const ConstructionContext&
         SkASSERT(dom.countChildren(xmlNode) == 0);
         auto txt = SkSVGTextLiteral::Make();
         txt->setText(SkString(dom.getName(xmlNode)));
+        txt->setParent(ctx.fParent);
         ctx.fParent->appendChild(std::move(txt));
 
         return nullptr;
@@ -436,7 +441,7 @@ void SkSVGDOM::render(SkCanvas* canvas) const {
         SkSVGLengthContext       lctx(fContainerSize);
         SkSVGPresentationContext pctx;
         fRoot->render(SkSVGRenderContext(canvas, fFontMgr, fResourceProvider, fIDMapper, lctx, pctx,
-                                         nullptr));
+                                         {nullptr, nullptr}));
     }
 }
 

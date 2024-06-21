@@ -133,6 +133,9 @@ SkRuntimeEffect::Result SkRuntimeEffect::Make(SkString sksl, const Options& opti
         SkSL::Program::Settings settings;
         settings.fInlineThreshold = 0;
         settings.fForceNoInline = options.forceNoInline;
+#if GR_TEST_UTILS
+        settings.fEnforceES2Restrictions = options.enforceES2Restrictions;
+#endif
         settings.fAllowNarrowingConversions = true;
         program = compiler->convertProgram(kind, SkSL::String(sksl.c_str(), sksl.size()), settings);
 
@@ -159,29 +162,36 @@ SkRuntimeEffect::Result SkRuntimeEffect::Make(SkString sksl,
     settings.fForceNoInline = options.forceNoInline;
     settings.fAllowNarrowingConversions = true;
 
-    const SkSL::FunctionDefinition* main = nullptr;
+    // Find 'main', then locate the sample coords parameter. (It might not be present.)
+    const SkSL::FunctionDefinition* main = SkSL::Program_GetFunction(*program, "main");
+    if (!main) {
+        RETURN_FAILURE("missing 'main' function");
+    }
+    const auto& mainParams = main->declaration().parameters();
+    auto iter = std::find_if(mainParams.begin(), mainParams.end(), [](const SkSL::Variable* p) {
+        return p->modifiers().fLayout.fBuiltin == SK_MAIN_COORDS_BUILTIN;
+    });
+    const SkSL::ProgramUsage::VariableCounts sampleCoordsUsage =
+            iter != mainParams.end() ? program->usage()->get(**iter)
+                                     : SkSL::ProgramUsage::VariableCounts{};
+
     uint32_t flags = 0;
     switch (kind) {
         case SkSL::ProgramKind::kRuntimeColorFilter: flags |= kAllowColorFilter_Flag; break;
         case SkSL::ProgramKind::kRuntimeShader:      flags |= kAllowShader_Flag;      break;
-        case SkSL::ProgramKind::kRuntimeEffect:      flags |= (kAllowColorFilter_Flag |
-                                                               kAllowShader_Flag);    break;
         default: SkUNREACHABLE;
     }
-    if (SkSL::Analysis::ReferencesSampleCoords(*program)) {
+
+
+    if (sampleCoordsUsage.fRead || sampleCoordsUsage.fWrite) {
         flags |= kUsesSampleCoords_Flag;
     }
 
-    // Color filters are not allowed to depend on position (local or device) in any way, but they
-    // can sample children with matrices or explicit coords. Because the children are color filters,
-    // we know (by induction) that they don't use those coords, so we keep the overall invariant.
-    //
-    // TODO(skbug.com/11813): When ProgramKind is always kRuntimeColorFilter or kRuntimeShader,
-    // this can be simpler. There is no way for color filters to refer to sk_FragCoord or sample
-    // coords in that mode.
-    if ((flags & kAllowColorFilter_Flag) &&
-        (SkSL::Analysis::ReferencesFragCoords(*program) || (flags & kUsesSampleCoords_Flag))) {
-        flags &= ~kAllowColorFilter_Flag;
+    // Color filters are not allowed to depend on position (local or device) in any way.
+    // The signature of main, and the declarations in sksl_rt_colorfilter should guarantee this.
+    if (flags & kAllowColorFilter_Flag) {
+        SkASSERT(!(flags & kUsesSampleCoords_Flag));
+        SkASSERT(!SkSL::Analysis::ReferencesFragCoords(*program));
     }
 
     size_t offset = 0;
@@ -203,7 +213,8 @@ SkRuntimeEffect::Result SkRuntimeEffect::Make(SkString sksl,
             // Child effects that can be sampled ('shader' or 'colorFilter')
             if (varType.isEffectChild()) {
                 children.push_back(var.name());
-                sampleUsages.push_back(SkSL::Analysis::GetSampleUsage(*program, var));
+                sampleUsages.push_back(SkSL::Analysis::GetSampleUsage(
+                        *program, var, sampleCoordsUsage.fWrite != 0));
             }
             // 'uniform' variables
             else if (var.modifiers().fFlags & SkSL::Modifiers::kUniform_Flag) {
@@ -234,18 +245,6 @@ SkRuntimeEffect::Result SkRuntimeEffect::Make(SkString sksl,
                 uniforms.push_back(uni);
             }
         }
-        // Functions
-        else if (elem->is<SkSL::FunctionDefinition>()) {
-            const auto& func = elem->as<SkSL::FunctionDefinition>();
-            const SkSL::FunctionDeclaration& decl = func.declaration();
-            if (decl.isMain()) {
-                main = &func;
-            }
-        }
-    }
-
-    if (!main) {
-        RETURN_FAILURE("missing 'main' function");
     }
 
 #undef RETURN_FAILURE
@@ -259,10 +258,6 @@ SkRuntimeEffect::Result SkRuntimeEffect::Make(SkString sksl,
                                                       std::move(sampleUsages),
                                                       flags));
     return Result{std::move(effect), SkString()};
-}
-
-SkRuntimeEffect::Result SkRuntimeEffect::Make(SkString sksl, const Options& options) {
-    return Make(std::move(sksl), options, SkSL::ProgramKind::kRuntimeEffect);
 }
 
 SkRuntimeEffect::Result SkRuntimeEffect::MakeForColorFilter(SkString sksl, const Options& options) {
@@ -289,7 +284,8 @@ SkRuntimeEffect::Result SkRuntimeEffect::MakeForShader(std::unique_ptr<SkSL::Pro
     return result;
 }
 
-sk_sp<SkRuntimeEffect> SkMakeCachedRuntimeEffect(SkString sksl) {
+sk_sp<SkRuntimeEffect> SkMakeCachedRuntimeEffect(SkRuntimeEffect::Result (*make)(SkString sksl),
+                                                 SkString sksl) {
     SK_BEGIN_REQUIRE_DENSE
     struct Key {
         uint32_t skslHashA;
@@ -317,7 +313,7 @@ sk_sp<SkRuntimeEffect> SkMakeCachedRuntimeEffect(SkString sksl) {
         }
     }
 
-    auto [effect, err] = SkRuntimeEffect::Make(std::move(sksl));
+    auto [effect, err] = make(std::move(sksl));
     if (!effect) {
         return nullptr;
     }
@@ -376,9 +372,12 @@ SkRuntimeEffect::SkRuntimeEffect(SkString sksl,
     // be accounted for in `fHash`. If you've added a new field to Options and caused the static-
     // assert below to trigger, please incorporate your field into `fHash` and update KnownOptions
     // to match the layout of Options.
-    struct KnownOptions { bool b; };
+    struct KnownOptions { bool a, b; };
     static_assert(sizeof(Options) == sizeof(KnownOptions));
-    fHash = SkOpts::hash_fn(&options.forceNoInline, sizeof(options.forceNoInline), fHash);
+    fHash = SkOpts::hash_fn(&options.forceNoInline,
+                      sizeof(options.forceNoInline), fHash);
+    fHash = SkOpts::hash_fn(&options.enforceES2Restrictions,
+                      sizeof(options.enforceES2Restrictions), fHash);
 }
 
 SkRuntimeEffect::~SkRuntimeEffect() = default;
@@ -558,10 +557,8 @@ public:
         sk_sp<SkData> inputs = get_xformed_uniforms(fEffect.get(), fUniforms, dstCS);
         SkASSERT(inputs);
 
-        // The color filter code might use sample-with-matrix (even though the matrix/coords are
-        // ignored by the child). There should be no way for the color filter to use device coords.
-        // Regardless, just to be extra-safe, we pass something valid (0, 0) as both coords, so
-        // the builder isn't trying to do math on invalid values.
+        // There should be no way for the color filter to use device coords, but we need to supply
+        // something. (Uninitialized values can trigger asserts in skvm::Builder).
         skvm::Coord zeroCoord = { p->splat(0.0f), p->splat(0.0f) };
 
         auto sampleChild = [&](int ix, skvm::Coord /*coord*/) {
@@ -638,7 +635,7 @@ sk_sp<SkFlattenable> SkRuntimeColorFilter::CreateProc(SkReadBuffer& buffer) {
     buffer.readString(&sksl);
     sk_sp<SkData> uniforms = buffer.readByteArrayAsData();
 
-    auto effect = SkMakeCachedRuntimeEffect(std::move(sksl));
+    auto effect = SkMakeCachedRuntimeEffect(SkRuntimeEffect::MakeForColorFilter, std::move(sksl));
     if (!buffer.validate(effect != nullptr)) {
         return nullptr;
     }
@@ -805,7 +802,7 @@ sk_sp<SkFlattenable> SkRTShader::CreateProc(SkReadBuffer& buffer) {
         localMPtr = &localM;
     }
 
-    auto effect = SkMakeCachedRuntimeEffect(std::move(sksl));
+    auto effect = SkMakeCachedRuntimeEffect(SkRuntimeEffect::MakeForShader, std::move(sksl));
     if (!buffer.validate(effect != nullptr)) {
         return nullptr;
     }

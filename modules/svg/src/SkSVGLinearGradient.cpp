@@ -10,6 +10,8 @@
 #include "modules/svg/include/SkSVGRenderContext.h"
 #include "modules/svg/include/SkSVGValue.h"
 
+#include <iostream>
+
 SkSVGLinearGradient::SkSVGLinearGradient() : INHERITED(SkSVGTag::kLinearGradient) {}
 
 bool SkSVGLinearGradient::parseAndSetAttribute(const char* name, const char* value) {
@@ -35,6 +37,8 @@ sk_sp<SkShader> SkSVGLinearGradient::onMakeShader(const SkSVGRenderContext& ctx,
     const auto y2 = lctx.resolve(fY2, SkSVGLengthContext::LengthType::kVertical);
 
     const SkPoint pts[2] = { {x1, y1}, {x2, y2}};
+
+    std::cout << "linGrad: " << x1 << ", " << y1 << ", " << x2 << ", " << y2 << std::endl;
 
     return SkGradientShader::MakeLinear(pts, colors, nullptr, pos, count, tm, 0, &localMatrix);
 }

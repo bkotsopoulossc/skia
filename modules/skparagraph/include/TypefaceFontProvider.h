@@ -4,6 +4,7 @@
 
 #include "include/private/SkTArray.h"
 #include "include/private/SkTHash.h"
+#include <iostream>
 #include <string>
 #include <unordered_map>
 #include <vector>
@@ -53,9 +54,6 @@ public:
                                             SkUnichar) const override {
         return nullptr;
     }
-    SkTypeface* onMatchFaceStyle(const SkTypeface*, const SkFontStyle&) const override {
-        return nullptr;
-    }
 
     sk_sp<SkTypeface> onMakeFromData(sk_sp<SkData>, int) const override { return nullptr; }
     sk_sp<SkTypeface> onMakeFromStreamIndex(std::unique_ptr<SkStreamAsset>, int) const override {
@@ -70,9 +68,7 @@ public:
         return nullptr;
     }
 
-    sk_sp<SkTypeface> onLegacyMakeTypeface(const char[], SkFontStyle) const override {
-        return nullptr;
-    }
+    sk_sp<SkTypeface> onLegacyMakeTypeface(const char[], SkFontStyle) const override;
 
 private:
     SkTHashMap<SkString, sk_sp<TypefaceFontStyleSet>> fRegisteredFamilies;

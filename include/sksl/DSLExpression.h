@@ -53,6 +53,11 @@ public:
     DSLExpression(int value);
 
     /**
+     * Creates an expression representing a literal uint.
+     */
+    DSLExpression(unsigned int value);
+
+    /**
      * Creates an expression representing a literal bool.
      */
     DSLExpression(bool value);
@@ -205,6 +210,8 @@ public:
     DSLPossibleExpression operator=(int expr);
 
     DSLPossibleExpression operator=(float expr);
+
+    DSLPossibleExpression operator=(double expr);
 
     DSLPossibleExpression operator[](DSLExpression index);
 

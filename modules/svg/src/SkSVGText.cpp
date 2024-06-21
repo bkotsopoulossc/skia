@@ -24,6 +24,7 @@
 #include "src/core/SkTextBlobPriv.h"
 #include "src/utils/SkUTF.h"
 
+#include <iostream>
 namespace {
 
 static SkFont ResolveFont(const SkSVGRenderContext& ctx) {
@@ -64,6 +65,8 @@ static SkFont ResolveFont(const SkSVGRenderContext& ctx) {
     };
 
     const auto& family = ctx.presentationContext().fInherited.fFontFamily->family();
+    std::cout << "looking for: " << family.c_str() << std::endl;
+    // std::cout << "paint fill: " << ctx.presentationContext().fInherited.fFill->iri().iri().c_str() << std::endl;
     const SkFontStyle style(weight(*ctx.presentationContext().fInherited.fFontWeight),
                             SkFontStyle::kNormal_Width,
                             slant(*ctx.presentationContext().fInherited.fFontStyle));
@@ -294,6 +297,7 @@ void SkSVGTextContext::shapeFragment(const SkString& txt, const SkSVGRenderConte
     };
 
     // Stash paints for access from SkShaper callbacks.
+    std::cout << "shapeFragment: " << txt.c_str() << std::endl;
     fCurrentFill   = ctx.fillPaint();
     fCurrentStroke = ctx.strokePaint();
 
@@ -473,7 +477,9 @@ void SkSVGTextContext::commitRunBuffer(const RunInfo& ri) {
 
 void SkSVGTextFragment::renderText(const SkSVGRenderContext& ctx, SkSVGTextContext* tctx,
                                    SkSVGXmlSpace xs) const {
-    SkSVGRenderContext localContext(ctx, this);
+    // N.B.: unlike regular elements, text fragments do not establish a new OBB scope -- they
+    // always defer to the root <text> element for OBB resolution.
+    SkSVGRenderContext localContext(ctx);
 
     if (this->onPrepareToRender(&localContext)) {
         this->onShapeText(localContext, tctx, xs);
@@ -486,6 +492,7 @@ SkPath SkSVGTextFragment::onAsPath(const SkSVGRenderContext&) const {
 }
 
 void SkSVGTextContainer::appendChild(sk_sp<SkSVGNode> child) {
+    std::cout << "appendChild: " << int(tag()) << std::endl;
     // Only allow text content child nodes.
     switch (child->tag()) {
     case SkSVGTag::kTextLiteral:
@@ -560,8 +567,54 @@ void SkSVGText::onRender(const SkSVGRenderContext& ctx) const {
     this->onShapeText(ctx, &tctx, this->getXmlSpace());
 }
 
+SkRect SkSVGTextLiteral::onObjectBoundingBox(const SkSVGRenderContext& ctx) const {
+    SkRect bounds = SkRect::MakeEmpty();
+
+    std::cout << "SkSVGTextLiteral::onObjectBoundingBox " << this->getText().c_str() << std::endl;
+
+    if (!this->getParent().isValid()) {
+        return bounds;
+    }
+
+    const SkSVGNode* parent = *this->getParent().get();
+    bounds = parent->objectBoundingBox(ctx);
+
+    // const SkSVGTextContext::ShapedTextCallback compute_bounds =
+    //     [&bounds](const SkSVGRenderContext& ctx, const sk_sp<SkTextBlob>& blob, const SkPaint*,
+    //               const SkPaint*) {
+    //         if (!blob) {
+    //             return;
+    //         }
+
+    //         SkAutoSTArray<64, SkRect> glyphBounds;
+
+    //         SkTextBlobRunIterator it(blob.get());
+
+    //         for (SkTextBlobRunIterator it(blob.get()); !it.done(); it.next()) {
+    //             glyphBounds.reset(SkToInt(it.glyphCount()));
+    //             it.font().getBounds(it.glyphs(), it.glyphCount(), glyphBounds.get(), nullptr);
+
+    //             SkASSERT(it.positioning() == SkTextBlobRunIterator::kRSXform_Positioning);
+    //             SkMatrix m;
+    //             for (uint32_t i = 0; i < it.glyphCount(); ++i) {
+    //                 m.setRSXform(it.xforms()[i]);
+    //                 bounds.join(m.mapRect(glyphBounds[i]));
+    //             }
+    //         }
+    //     };
+
+    // {
+    //     SkSVGTextContext tctx(ctx, compute_bounds);
+    //     this->onShapeText(ctx, &tctx, SkSVGXmlSpace::kDefault);
+    // }
+
+    return bounds;
+}
+
 SkRect SkSVGText::onObjectBoundingBox(const SkSVGRenderContext& ctx) const {
     SkRect bounds = SkRect::MakeEmpty();
+
+    std::cout << "SkSVGText::onObjectBoundingBox" << std::endl;
 
     const SkSVGTextContext::ShapedTextCallback compute_bounds =
         [&bounds](const SkSVGRenderContext& ctx, const sk_sp<SkTextBlob>& blob, const SkPaint*,

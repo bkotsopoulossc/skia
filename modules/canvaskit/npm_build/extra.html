@@ -32,6 +32,7 @@
 
 <h2> Paragraph </h2>
 <canvas id=para1 width=600 height=600></canvas>
+<canvas id=para2 width=600 height=600 tabindex='-1'></canvas>
 
 <h2> CanvasKit can serialize/deserialize .skp files</h2>
 <canvas id=skp width=500 height=500></canvas>
@@ -44,6 +45,8 @@
 <canvas id=colorsupport width=300 height=300></canvas>
 
 <script type="text/javascript" src="/node_modules/canvaskit/bin/canvaskit.js"></script>
+
+<script type="text/javascript" src="textapi_utils.js"></script>
 
 <script type="text/javascript" charset="utf-8">
 
@@ -141,6 +144,7 @@
 
   Promise.all([ckLoaded, loadFont]).then((results) => {
     ParagraphAPI1(...results);
+    ParagraphAPI2(...results);
     GlyphGame(...results)
   });
   Promise.all([ckLoaded, loadSkp]).then((results) => {SkpExample(...results)});
@@ -258,41 +262,6 @@
 
       canvas.drawLine(wrapTo, 0, wrapTo, 400, fontPaint);
 
-      const offset = function(array, dx, dy) {
-          array[0] += dx;
-          array[1] += dy;
-          array[2] += dx;
-          array[3] += dy;
-      }
-
-      {
-          const p = new CanvasKit.Paint();
-          let runs = paragraph.getShapedRuns();
-          let fm = font.getMetrics();
-          let colors = [ [1,0,0,0.5], [0,1,0,0.5] ];
-
-          for (let i in runs) {
-              let r = runs[i];
-              p.setColor(colors[i & 1]);
-
-              let bounds = [
-                 r.positions[0],
-                 r.positions[1] + fm.ascent,
-                 r.positions[r.positions.length-2] + font.getGlyphWidths(r.glyphs.slice(-1))[0],
-                 r.positions[r.positions.length-1] + fm.descent
-              ];
-              offset(bounds, r.origin_x, r.origin_y);
-              canvas.drawRect(bounds, p);
-          }
-          p.delete();
-
-          fontPaint.setColor(CanvasKit.BLUE);
-          for (let r of runs) {
-              canvas.drawGlyphs(r.glyphs, r.positions, r.origin_x, r.origin_y, font, fontPaint);
-          }
-          fontPaint.setColor(CanvasKit.BLACK);
-      }
-
       surface.requestAnimationFrame(drawFrame);
     }
     surface.requestAnimationFrame(drawFrame);
@@ -305,6 +274,317 @@
     document.getElementById('para1').addEventListener('pointermove', interact);
     return surface;
   }
+
+    function ParagraphAPI2(CanvasKit, fontData) {
+      if (!CanvasKit || !fontData) {
+        return;
+      }
+
+      const surface = CanvasKit.MakeCanvasSurface('para2');
+      if (!surface) {
+        console.error('Could not make surface');
+        return;
+      }
+
+      const mouse = MakeMouse();
+      const cursor = MakeCursor(CanvasKit);
+      const canvas = surface.getCanvas();
+      const fontMgr = CanvasKit.FontMgr.FromData([fontData]);
+
+      const paraStyle = new CanvasKit.ParagraphStyle({
+          textStyle: {
+              color: CanvasKit.GRAY,
+              fontFamilies: ['Roboto'],
+              fontSize: 40,
+          },
+          textAlign: CanvasKit.TextAlign.Left,
+      });
+
+      const text0 = "In a hole in the ground there lived a hobbit. Not a nasty, dirty, " +
+                    "wet hole full of worms and oozy smells. This was a hobbit-hole and " +
+                    "that means good food, a warm hearth, and all the comforts of home.";
+      const WIDTH = 600;
+
+      const tf = fontMgr.MakeTypefaceFromData(fontData);
+      const font = new CanvasKit.Font(tf, 40);
+      const fm = font.getMetrics();
+      const fontPaint = new CanvasKit.Paint();
+      fontPaint.setStyle(CanvasKit.PaintStyle.Fill);
+      fontPaint.setAntiAlias(true);
+
+      function mid(a, b) { return (a + b) * 0.5; }
+
+      function runs_x_to_index(runs, x) {
+          for (const r of runs) {
+              for (let i = 1; i < r.offsets.length; i += 1) {
+                  if (x < r.positions[i*2]) {
+                      if (x <= mid(r.positions[i*2-2], r.positions[i*2])) {
+                          return r.offsets[i-1];
+                      } else {
+                          return r.offsets[i];
+                      }
+                  }
+              }
+          }
+          const r = runs[runs.length-1];
+          return r.offsets[r.offsets.length-1];
+      }
+
+      function lines_pos_to_index(lines, x, y) {
+          if (y < lines[0].top) {
+              return 0;
+          }
+          for (const l of lines) {
+              if (y <= l.bottom) {
+                  return runs_x_to_index(l.runs, x);
+              }
+          }
+          return lines[lines.length - 1].textRange.last + 1;
+      }
+
+      function runs_index_to_run(runs, index) {
+          for (const r of runs) {
+              if (index <= r.offsets[r.offsets.length-1]) {
+                  return r;
+              }
+          }
+          return null;
+      }
+
+    function runs_index_to_x(runs, index) {
+        const r = runs_index_to_run(runs, index);
+        for (const i in r.offsets) {
+            if (index == r.offsets[i]) {
+                return r.positions[i*2];
+            }
+        }
+        return null;
+    }
+
+    function lines_index_to_line_index(lines, index) {
+        let i = 0;
+        for (const l of lines) {
+            if (index <= l.textRange.last) {
+                return i;
+            }
+            i += 1;
+        }
+        return lines.length-1;
+    }
+
+    function lines_index_to_line(lines, index) {
+        return lines[lines_index_to_line_index(lines, index)];
+    }
+
+    function lines_index_to_x(lines, index) {
+        for (const l of lines) {
+            if (index <= l.textRange.last) {
+                return runs_index_to_x(l.runs, index);
+            }
+        }
+    }
+
+    function lines_indices_to_path(lines, a, b, fm, width) {
+          if (a == b) {
+              return null;
+          }
+          if (a > b) { [a, b] = [b, a]; }
+
+          const path = new CanvasKit.Path();
+          const la = lines_index_to_line(lines, a);
+          const lb = lines_index_to_line(lines, b);
+          const ax = runs_index_to_x(la.runs, a);
+          const bx = runs_index_to_x(lb.runs, b);
+          if (la == lb) {
+              path.addRect([ax, la.top, bx, la.bottom]);
+          } else {
+              path.addRect([ax, la.top, width, la.bottom]);
+              path.addRect([0, lb.top, bx, lb.bottom]);
+              if (la.bottom < lb.top) {
+                  path.addRect([0, la.bottom, width, lb.top]);   // extra lines inbetween
+              }
+          }
+          return path;
+      }
+
+      const string_del = function(str, start, end) {
+          return str.slice(0, start) + str.slice(end, str.length);
+      };
+
+      let editor = {
+          _text: null,
+          _lines: null,
+          _cursor: null,
+          _width: 1e20,
+          _index: { start: 0, end: 0 },
+
+          init: function(text, cursor, width) {
+              this._text = text;
+              this._cursor = cursor;
+              this._width = width;
+
+              this._buildLines();
+          },
+          getLines: function() { return this._lines; },
+
+          setIndex: function(i) {
+              this._index.start = this._index.end = i;
+              const l = lines_index_to_line(this._lines, i);
+              const x = runs_index_to_x(l.runs, i);
+              this._cursor.place(x, l.top, l.bottom);
+          },
+          setIndices: function(a, b) {
+              if (a > b) { [a, b] = [b, a]; }
+              this._index.start = a;
+              this._index.end = b;
+              this._cursor.setPath(lines_indices_to_path(this._lines, a, b, fm, this._width));
+          },
+          moveDX: function(dx) {
+              let index;
+              if (this._index.start == this._index.end) {
+                  // just adjust and pin
+                  index = Math.max(Math.min(this._index.start + dx, this._text.length), 0);
+              } else {
+                  // 'deselect' the region, and turn it into just a single index
+                  index = dx < 0 ? this._index.start : this._index.end;
+              }
+              this.setIndex(index);
+          },
+          moveDY: function(dy) {
+              let index = (dy < 0) ? this._index.start : this._index.end;
+              const i = lines_index_to_line_index(this._lines, index);
+              if (dy < 0 && i == 0) {
+                  index = 0;
+              } else if (dy > 0 && i == this._lines.length - 1) {
+                  index = this._text.length;
+              } else {
+                  const x = runs_index_to_x(this._lines[i].runs, index);
+                  // todo: statefully track "original" x when an up/down sequence started,
+                  //       so we can avoid drift.
+                  index = runs_x_to_index(this._lines[i+dy].runs, x);
+              }
+              this.setIndex(index);
+          },
+          _buildLines: function() {
+              const builder = CanvasKit.ParagraphBuilder.Make(paraStyle, fontMgr);
+              builder.addText(this._text);
+              const paragraph = builder.build();
+              paragraph.layout(WIDTH);
+
+              const rec = new CanvasKit.PictureRecorder();
+              const can = rec.beginRecording([0,0,9999,9999]);
+              can.drawParagraph(paragraph, 0, 0);
+              rec.delete();
+
+              this._lines = paragraph.getShapedLines();
+
+              paragraph.delete();
+              builder.delete();
+          },
+          deleteSelection: function() {
+              let start = this._index.start;
+              if (start == this._index.end) {
+                  if (start > 0) {
+                      this._text = string_del(this._text, start - 1, start);
+                      start -= 1;
+                  }
+              } else {
+                  this._text = string_del(this._text,  start, this._index.end);
+              }
+              this._buildLines();
+              this.setIndex(start);
+          },
+          insert: function(charcode) {
+              if (this._index.start != this._index.end) {
+                  this.deleteSelection();
+              }
+              const index = this._index.start;
+              this._text = this._text.slice(0, index) + charcode + this._text.slice(index);
+              this._buildLines();
+              this.setIndex(index + 1);
+          },
+      };
+      editor.init(text0, cursor, WIDTH);
+
+      function drawFrame(canvas) {
+        const lines = editor.getLines();
+
+        canvas.clear(CanvasKit.WHITE);
+
+        if (mouse.isActive()) {
+            const pos = mouse.getPos();
+            const a = lines_pos_to_index(lines, pos[0], pos[1]);
+            const b = lines_pos_to_index(lines, pos[2], pos[3]);
+            if (a == b) {
+                editor.setIndex(a);
+            } else {
+                editor.setIndices(a, b);
+            }
+        }
+
+        const bgcolors = [[1,0,0,0.05], [0,1,0,0.05]];
+        let lineNo = 0;
+        cursor.draw_before(canvas);
+        for (const l of lines) {
+            if (true) { // test line bounds
+                const bounds = [0, l.top, WIDTH, l.bottom];
+                fontPaint.setColor(bgcolors[lineNo & 1]);
+                canvas.drawRect(bounds, fontPaint);
+                fontPaint.setColor([0,0,0,1]);
+            }
+            for (let r of l.runs) {
+                canvas.drawGlyphs(r.glyphs, r.positions, 0, 0, font, fontPaint);
+            }
+            lineNo += 1;
+        }
+        cursor.draw_after(canvas);
+
+        surface.requestAnimationFrame(drawFrame);
+      }
+      surface.requestAnimationFrame(drawFrame);
+
+      function interact(e) {
+        const type = e.type;
+        if (type === 'pointerup') {
+            mouse.setUp(e.offsetX, e.offsetY);
+        } else if (type === 'pointermove') {
+            mouse.setMove(e.offsetX, e.offsetY);
+        } else if (type === 'pointerdown') {
+            mouse.setDown(e.offsetX, e.offsetY);
+        }
+      };
+
+      function keyhandler(e) {
+          switch (e.key) {
+              case 'ArrowLeft':  editor.moveDX(-1); break;
+              case 'ArrowRight': editor.moveDX(1); break;
+              case 'ArrowUp':
+                e.preventDefault();
+                editor.moveDY(-1);
+                break;
+              case 'ArrowDown':
+                e.preventDefault();
+                editor.moveDY(1);
+                break;
+              case 'Backspace':
+                editor.deleteSelection();
+                break;
+              case 'Shift':
+                break;
+              default:
+                if (!e.ctrlKey && !e.metaKey) {
+                    editor.insert(e.key);
+                }
+                break;
+          }
+      }
+
+      document.getElementById('para2').addEventListener('pointermove', interact);
+      document.getElementById('para2').addEventListener('pointerdown', interact);
+      document.getElementById('para2').addEventListener('pointerup', interact);
+      document.getElementById('para2').addEventListener('keydown', keyhandler);
+      return surface;
+    }
 
   function RTShaderAPI1(CanvasKit) {
     if (!CanvasKit) {
